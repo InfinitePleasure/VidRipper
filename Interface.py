@@ -6,7 +6,7 @@ import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QThread
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QWidget, QFileDialog
+from PyQt5.QtWidgets import QWidget, QFileDialog, QMessageBox
 
 import EventListener
 from VidRipper import FileManagement
@@ -29,9 +29,9 @@ class VideoThread(QThread):
 
     def run(self):
         while self._run_flag:
-            self.msleep(100)
-            if 0 < len(EventListener.current_frames) and EventListener.index < len(EventListener.current_frames):
-                self.change_pixmap_signal.emit(EventListener.current_frames[EventListener.index])
+            self.msleep(10)
+            if 0 < len(EventListener.EventListener.current_frames) and EventListener.EventListener.index < len(EventListener.EventListener.current_frames):
+                self.change_pixmap_signal.emit(EventListener.EventListener.current_frames[EventListener.EventListener.index])
 
     def stop(self):
         """Sets run flag to False and waits for thread to finish"""
@@ -51,7 +51,7 @@ class Ui_MainWindow(QWidget):
         font.setFamily("Fixedsys")
         self.exportBtn.setFont(font)
         self.exportBtn.setObjectName("pushButton")
-        self.exportBtn.clicked.connect(EventListener.export)
+        self.exportBtn.clicked.connect(self.export)
         self.importBtn = QtWidgets.QPushButton(self.centralwidget)
         self.importBtn.setGeometry(QtCore.QRect(20, 10, 200, 680))
         font = QtGui.QFont()
@@ -73,11 +73,11 @@ class Ui_MainWindow(QWidget):
         self.exportAll = QtWidgets.QCheckBox(self.centralwidget)
         self.exportAll.setGeometry(QtCore.QRect(1080, 10, 180, 30))
         self.exportAll.setObjectName("checkBox")
-        self.exportAll.clicked.connect(EventListener.all_func)
+        self.exportAll.clicked.connect(self.all_func)
         self.exportMult = QtWidgets.QCheckBox(self.centralwidget)
         self.exportMult.setGeometry(QtCore.QRect(1080, 55, 180, 30))
         self.exportMult.setObjectName("checkBox_2")
-        self.exportMult.clicked.connect(EventListener.mult_func)
+        self.exportMult.clicked.connect(self.mult_func)
         main_window.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(main_window)
         self.statusbar.setObjectName("statusbar")
@@ -125,27 +125,49 @@ class Ui_MainWindow(QWidget):
         return QPixmap.fromImage(p)
 
     def val(self):
-        EventListener.setIndex(self.spinBox.value())
+        self.setIndex(self.spinBox.value())
 
     @pyqtSlot()
     def import_(self):
-        if EventListener.mult:
+        if EventListener.EventListener.mult:
             files = openFileNamesDialog()
-            FileManagement.files.clear()
-            FileManagement.files = files
+            if len(files) > 0 and files[0] != "":
+                FileManagement.FileManagement.files.clear()
+                EventListener.EventListener.current_frames.clear()
+                FileManagement.FileManagement.files = files
         else:
             file = openFileNameDialog()
-            FileManagement.files.clear()
-            FileManagement.files.append(file)
-            EventListener.current_frames = FileManagement.get_frames()
-            self.spinBox.setMaximum(len(EventListener.current_frames))
+            print(file)
+            if file != "":
+                FileManagement.FileManagement.files.clear()
+                FileManagement.FileManagement.files.append(file)
+                EventListener.EventListener.current_frames.clear()
+                EventListener.EventListener.current_frames = FileManagement.get_frames()
+                self.spinBox.setMaximum(len(EventListener.EventListener.current_frames))
+
+    @pyqtSlot()
+    def export(self):
+        FileManagement.extract(EventListener.EventListener.all_, FileManagement.FileManagement.files, EventListener.EventListener.index)
+        QMessageBox.about(None, "Extraction", "Extraction terminée !")
+
+    @pyqtSlot()
+    def all_func(self):
+        EventListener.EventListener.all_ = not EventListener.EventListener.all_
+
+    @pyqtSlot()
+    def mult_func(self):
+        EventListener.EventListener.mult = not EventListener.EventListener.mult
+
+    @pyqtSlot()
+    def setIndex(self, index_):
+        EventListener.EventListener.index = index_
 
 
 def openFileNameDialog():
     options = QFileDialog.Options()
     options |= QFileDialog.DontUseNativeDialog
     fileName, _ = QFileDialog.getOpenFileName(None, "QFileDialog.getOpenFileName()", "",
-                                              "All Files (*);;Vidéo Files (*.mp4 *.mov *.avi)", options=options)
+                                              "Vidéo Files (*.mp4 *.mov *.avi);;All Files (*)", options=options)
     return fileName
 
 
@@ -153,5 +175,5 @@ def openFileNamesDialog():
     options = QFileDialog.Options()
     options |= QFileDialog.DontUseNativeDialog
     files, _ = QFileDialog.getOpenFileNames(None, "QFileDialog.getOpenFileNames()", "",
-                                            "All Files (*);;Vidéo Files (*.mp4 *.mov *.avi)", options=options)
+                                            "Vidéo Files (*.mp4 *.mov *.avi);;All Files (*)", options=options)
     return files

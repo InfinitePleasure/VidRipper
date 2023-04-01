@@ -6,12 +6,14 @@ import cv2
 import numpy as np
 from PyQt5.QtWidgets import QMessageBox
 
-files = []
+
+class FileManagement:
+    files = []
 
 
 def get_frames() -> np.ndarray:
-    if len(files) > 0 and (len(files) > 0 and files[0] != ''):
-        for file in files:
+    if len(FileManagement.files) > 0 and (len(FileManagement.files) > 0 and FileManagement.files[0] != ''):
+        for file in FileManagement.files:
             cap = cv2.VideoCapture(file)
 
             frames = []
@@ -27,7 +29,7 @@ def get_frames() -> np.ndarray:
             return frames
 
 
-def extract(all_, index: int = None):
+def extract(all_, files, index: int = None):
     if len(files) > 0 and (len(files) > 0 and files[0] != ''):
         for file in files:
             dire = file + "_extract"
