@@ -9,7 +9,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QWidget, QFileDialog, QMessageBox
 
 import EventListener
-from VidRipper import FileManagement
+import FileManagement
 
 
 # Form implementation generated from reading ui file 'untitled.ui'
@@ -165,7 +165,6 @@ class Ui_MainWindow(QWidget):
 
 def openFileNameDialog():
     options = QFileDialog.Options()
-    options |= QFileDialog.DontUseNativeDialog
     fileName, _ = QFileDialog.getOpenFileName(None, "QFileDialog.getOpenFileName()", "",
                                               "Vidéo Files (*.mp4 *.mov *.avi);;All Files (*)", options=options)
     return fileName
@@ -173,7 +172,6 @@ def openFileNameDialog():
 
 def openFileNamesDialog():
     options = QFileDialog.Options()
-    options |= QFileDialog.DontUseNativeDialog
     files, _ = QFileDialog.getOpenFileNames(None, "QFileDialog.getOpenFileNames()", "",
                                             "Vidéo Files (*.mp4 *.mov *.avi);;All Files (*)", options=options)
     return files
