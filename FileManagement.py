@@ -39,9 +39,9 @@ def extract(all_, index: int = None):
                 if not ret:
                     break
                 if not all_ and i == index:
-
+                    cv2.imwrite(str(dire) + "\\" + str(i) + '.jpg', frame)
                     break
-                else:
+                if all_:
                     cv2.imwrite(str(dire) + "\\" + str(i) + '.jpg', frame)
                     time.sleep(0.01)
                 i += 1

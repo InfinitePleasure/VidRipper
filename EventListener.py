@@ -1,4 +1,5 @@
 from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtWidgets import QMessageBox
 
 import FileManagement
 import Interface
@@ -30,7 +31,8 @@ def setIndex(index_):
 @pyqtSlot()
 def export():
     global all_, index
-    FileManagement.extract(index)
+    FileManagement.extract(all_, index)
+    QMessageBox.about(None, "Extraction", "Extraction terminée !")
 
 
 @pyqtSlot()
