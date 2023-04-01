@@ -40,10 +40,10 @@ def extract(all_, files, extract_dir, index: int = None):
                     break
                 if not all_ and i == index:
                     print(file)
-                    cv2.imwrite(str(extract_dir) + "\\" + str(file).split("/")[-1] + "_" + str(i) + '.jpg', frame)
+                    cv2.imwrite(str(extract_dir) + "/" + str(file).split("/")[-1] + "_" + str(i) + '.jpg', frame)
                     break
                 if all_:
-                    cv2.imwrite(str(extract_dir) + "\\" + str(file).split("/")[-1] + "_" + str(i) + '.jpg', frame)
+                    cv2.imwrite(str(extract_dir) + "/" + str(file).split("/")[-1] + "_" + str(i) + '.jpg', frame)
                     time.sleep(0.01)
                 i += 1
             cap.release()
