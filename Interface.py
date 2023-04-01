@@ -149,9 +149,11 @@ class Ui_MainWindow(QWidget):
 
     @pyqtSlot()
     def export(self):
-        FileManagement.extract(EventListener.EventListener.all_, FileManagement.FileManagement.files, openDirNameDialog(),
-                               EventListener.EventListener.index)
-        QMessageBox.about(None, "Extraction", "Extraction terminée !")
+        dire = openDirNameDialog()
+        if dire != "":
+            FileManagement.extract(EventListener.EventListener.all_, FileManagement.FileManagement.files, dire,
+            EventListener.EventListener.index)
+            QMessageBox.about(None, "Extraction", "Extraction terminée !")
 
     @pyqtSlot()
     def all_func(self):

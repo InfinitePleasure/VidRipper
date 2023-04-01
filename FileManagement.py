@@ -39,6 +39,7 @@ def extract(all_, files, extract_dir, index: int = None):
                 if not ret:
                     break
                 if not all_ and i == index:
+                    print(file)
                     cv2.imwrite(str(extract_dir) + "\\" + str(file).split("/")[-1] + "_" + str(i) + '.jpg', frame)
                     break
                 if all_:
