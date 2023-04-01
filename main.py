@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow
 
-from output2 import Ui_MainWindow
+from Interface import Ui_MainWindow
 
 # Only needed for access to command line arguments
 import sys

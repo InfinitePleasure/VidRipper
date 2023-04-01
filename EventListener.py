@@ -1,11 +1,12 @@
 from PyQt5.QtCore import pyqtSlot
 
 import FileManagement
-import output2
+import Interface
 
 all_: bool = False
 mult: bool = False
 index = 0
+current_frames = []
 
 
 @pyqtSlot()
@@ -24,22 +25,23 @@ def mult_func():
 def setIndex(index_):
     global index
     index = index_
-    print(index)
 
 
 @pyqtSlot()
 def export():
     global all_, index
-    FileManagement.extract(all_, index)
+    FileManagement.extract(index)
 
 
 @pyqtSlot()
 def import_():
+    global current_frames
     if mult:
-        files = output2.openFileNamesDialog()
+        files = Interface.openFileNamesDialog()
         FileManagement.files.clear()
         FileManagement.files = files
     else:
-        file = output2.openFileNameDialog()
+        file = Interface.openFileNameDialog()
         FileManagement.files.clear()
         FileManagement.files.append(file)
+        current_frames = FileManagement.get_frames()
