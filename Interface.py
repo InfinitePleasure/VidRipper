@@ -42,41 +42,40 @@ class VideoThread(QThread):
 class Ui_MainWindow(QWidget):
     def setupUi(self, main_window):
         main_window.setObjectName("MainWindow")
-        main_window.resize(615, 291)
+        main_window.resize(1280, 720)
         self.centralwidget = QtWidgets.QWidget(main_window)
         self.centralwidget.setObjectName("centralwidget")
         self.exportBtn = QtWidgets.QPushButton(self.centralwidget)
-        self.exportBtn.setGeometry(QtCore.QRect(420, 180, 180, 80))
+        self.exportBtn.setGeometry(QtCore.QRect(1080, 600, 180, 80))
         font = QtGui.QFont()
         font.setFamily("Fixedsys")
         self.exportBtn.setFont(font)
         self.exportBtn.setObjectName("pushButton")
         self.exportBtn.clicked.connect(EventListener.export)
         self.importBtn = QtWidgets.QPushButton(self.centralwidget)
-        self.importBtn.setGeometry(QtCore.QRect(20, 10, 150, 250))
+        self.importBtn.setGeometry(QtCore.QRect(20, 10, 200, 680))
         font = QtGui.QFont()
         font.setFamily("Fixedsys")
         self.importBtn.setFont(font)
         self.importBtn.setObjectName("pushButton_2")
-        self.importBtn.clicked.connect(EventListener.import_)
+        self.importBtn.clicked.connect(self.import_)
         self.image_label = QtWidgets.QLabel(self.centralwidget)
         self.spinBox = QtWidgets.QSpinBox(self.centralwidget)
-        self.spinBox.setMaximum(10000)
-        self.spinBox.setGeometry(QtCore.QRect(420, 120, 180, 25))
+        self.spinBox.setGeometry(QtCore.QRect(1080, 120, 180, 25))
         font = QtGui.QFont()
         font.setFamily("Arial")
         self.spinBox.setFont(font)
         self.spinBox.setObjectName("spinBox")
         self.spinBox.valueChanged.connect(self.val)
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(420, 90, 181, 31))
+        self.label.setGeometry(QtCore.QRect(1080, 90, 181, 31))
         self.label.setObjectName("label")
         self.exportAll = QtWidgets.QCheckBox(self.centralwidget)
-        self.exportAll.setGeometry(QtCore.QRect(420, 10, 180, 30))
+        self.exportAll.setGeometry(QtCore.QRect(1080, 10, 180, 30))
         self.exportAll.setObjectName("checkBox")
         self.exportAll.clicked.connect(EventListener.all_func)
         self.exportMult = QtWidgets.QCheckBox(self.centralwidget)
-        self.exportMult.setGeometry(QtCore.QRect(420, 55, 180, 30))
+        self.exportMult.setGeometry(QtCore.QRect(1080, 55, 180, 30))
         self.exportMult.setObjectName("checkBox_2")
         self.exportMult.clicked.connect(EventListener.mult_func)
         main_window.setCentralWidget(self.centralwidget)
@@ -119,13 +118,27 @@ class Ui_MainWindow(QWidget):
         rgb_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
         h, w, ch = rgb_image.shape
         bytes_per_line = ch * w
-        self.image_label.setGeometry(QtCore.QRect(180, 10, 230, 230))
+        self.image_label.setGeometry(QtCore.QRect(230, 10, 850, 700))
+        self.image_label.alignment()
         convert_to_Qt_format = QtGui.QImage(rgb_image.data, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
-        p = convert_to_Qt_format.scaled(230, 230, QtCore.Qt.KeepAspectRatio)
+        p = convert_to_Qt_format.scaled(850, 700, QtCore.Qt.KeepAspectRatio)
         return QPixmap.fromImage(p)
 
     def val(self):
         EventListener.setIndex(self.spinBox.value())
+
+    @pyqtSlot()
+    def import_(self):
+        if EventListener.mult:
+            files = openFileNamesDialog()
+            FileManagement.files.clear()
+            FileManagement.files = files
+        else:
+            file = openFileNameDialog()
+            FileManagement.files.clear()
+            FileManagement.files.append(file)
+            EventListener.current_frames = FileManagement.get_frames()
+            self.spinBox.setMaximum(len(EventListener.current_frames))
 
 
 def openFileNameDialog():

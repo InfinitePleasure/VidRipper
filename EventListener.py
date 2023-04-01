@@ -2,7 +2,6 @@ from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QMessageBox
 
 import FileManagement
-import Interface
 
 all_: bool = False
 mult: bool = False
@@ -34,16 +33,3 @@ def export():
     FileManagement.extract(all_, index)
     QMessageBox.about(None, "Extraction", "Extraction terminée !")
 
-
-@pyqtSlot()
-def import_():
-    global current_frames
-    if mult:
-        files = Interface.openFileNamesDialog()
-        FileManagement.files.clear()
-        FileManagement.files = files
-    else:
-        file = Interface.openFileNameDialog()
-        FileManagement.files.clear()
-        FileManagement.files.append(file)
-        current_frames = FileManagement.get_frames()
