@@ -29,11 +29,9 @@ def get_frames() -> np.ndarray:
             return frames
 
 
-def extract(all_, files, index: int = None):
+def extract(all_, files, extract_dir, index: int = None):
     if len(files) > 0 and (len(files) > 0 and files[0] != ''):
         for file in files:
-            dire = file + "_extract"
-            os.makedirs(dire, exist_ok=True)
             cap = cv2.VideoCapture(file)
             i = 0
             while cap.isOpened():
@@ -41,10 +39,10 @@ def extract(all_, files, index: int = None):
                 if not ret:
                     break
                 if not all_ and i == index:
-                    cv2.imwrite(str(dire) + "\\" + str(i) + '.jpg', frame)
+                    cv2.imwrite(str(extract_dir) + "\\" + str(file).split("/")[-1] + "_" + str(i) + '.jpg', frame)
                     break
                 if all_:
-                    cv2.imwrite(str(dire) + "\\" + str(i) + '.jpg', frame)
+                    cv2.imwrite(str(extract_dir) + "\\" + str(file).split("/")[-1] + "_" + str(i) + '.jpg', frame)
                     time.sleep(0.01)
                 i += 1
             cap.release()

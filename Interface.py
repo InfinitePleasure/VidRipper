@@ -30,8 +30,10 @@ class VideoThread(QThread):
     def run(self):
         while self._run_flag:
             self.msleep(10)
-            if 0 < len(EventListener.EventListener.current_frames) and EventListener.EventListener.index < len(EventListener.EventListener.current_frames):
-                self.change_pixmap_signal.emit(EventListener.EventListener.current_frames[EventListener.EventListener.index])
+            if 0 < len(EventListener.EventListener.current_frames) and EventListener.EventListener.index < len(
+                    EventListener.EventListener.current_frames):
+                self.change_pixmap_signal.emit(
+                    EventListener.EventListener.current_frames[EventListener.EventListener.index])
 
     def stop(self):
         """Sets run flag to False and waits for thread to finish"""
@@ -147,7 +149,8 @@ class Ui_MainWindow(QWidget):
 
     @pyqtSlot()
     def export(self):
-        FileManagement.extract(EventListener.EventListener.all_, FileManagement.FileManagement.files, EventListener.EventListener.index)
+        FileManagement.extract(EventListener.EventListener.all_, FileManagement.FileManagement.files, openDirNameDialog(),
+                               EventListener.EventListener.index)
         QMessageBox.about(None, "Extraction", "Extraction terminée !")
 
     @pyqtSlot()
@@ -168,6 +171,12 @@ def openFileNameDialog():
     fileName, _ = QFileDialog.getOpenFileName(None, "QFileDialog.getOpenFileName()", "",
                                               "Vidéo Files (*.mp4 *.mov *.avi);;All Files (*)", options=options)
     return fileName
+
+
+def openDirNameDialog():
+    options = QFileDialog.Options()
+    direr = QFileDialog.getExistingDirectory(None, "QFileDialog.getOpenFileName()", "", options=options)
+    return direr
 
 
 def openFileNamesDialog():
